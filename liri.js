@@ -1,5 +1,18 @@
+// :How to use Liri:
+// Liri has 4 functions that perform different actions based on the arguments you provide
+// Here are the commands needed to run each one of them
+// -------------------------------------------------------------------------------------------------------------------------------------
+// node liri.js concert-this <artist name>
+// node liri.js spotify-this-song <song name>
+// node liri.js movie-this <movie name>
+// node liri.js do-what-it-says
+// do-what-it-says command runs a function that reads the file random.txt and runs the appropriate function based on the text provided
+// -------------------------------------------------------------------------------------------------------------------------------------
+
+
 require("dotenv").config();
 
+// all of the required programs needed to run this app
 var keys = require("./keys.js");
 var axios = require("axios");
 var fs = require("fs");

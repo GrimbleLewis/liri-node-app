@@ -8,26 +8,22 @@ var Spotify = require("node-spotify-api");
 var spotify = new Spotify(keys.spotify);
 
 
-// if (command === "concert-this") {
-//   concertThis();
-// } else if (command === "spotify-this-song") {
-//   spotifyThisSong();
-// } else if (command === "movie-this") {
-//   movieThis();
-// } else if (command === "do-what-it-says") {
-//   doWhatItSays();
-// } else {
-//   console.log("Please enter a valid command");
-// }
-
 function concertThis(artist) {
-  var artist = process.argv.slice(3).join(" ");
+  // if running do-what-it-says, artist should not be in quotations in random.txt file
+  if (process.argv[2] === "do-what-it-says") {
+    artist;
+  } else {
+    artist = process.argv.slice(3).join(" ");
+  }
   var queryUrl =
     "https://rest.bandsintown.com/artists/" +
     artist +
     "/events?app_id=codingbootcamp";
   axios.get(queryUrl).then(function(response) {
-    console.log("\nHere are the next 10 upcoming shows for " + artist + "\n\n");
+    if (response.data[0] === undefined){
+      console.log("\nI'm sorry, it doesn't look like there are any upcoming events for " + titleCase(artist));
+    } else {
+    console.log("\nHere are the next 10 upcoming shows for " + titleCase(artist) + "\n\n");
     for (var i = 0; i < 10; i++) {
       console.log("Venue Name: " + response.data[i].venue.name);
       console.log(
@@ -43,14 +39,18 @@ function concertThis(artist) {
       );
     }
     console.log("We hope to see you at a future event!");
+  }
   });
+
 }
 
 function spotifyThisSong(song) {
-  if (process.argv[3] === undefined) {
+  if (process.argv[2] !== "do-what-it-says" && process.argv[3] === undefined) {
     song = "The Sign";
+  } else if (process.argv[2] === "do-what-it-says"){
+    song;
   } else {
-    var song = process.argv.slice(3).join(" ");
+    song = process.argv.slice(3).join(" ");
   }
   console.log("\nHere is what Liri found for you");
   spotify
@@ -71,11 +71,15 @@ function spotifyThisSong(song) {
     });
 }
 
+
+
 function movieThis(movie) {
-  if (process.argv[3] === undefined) {
+  if (process.argv[2] !== "do-what-it-says" && process.argv[3] === undefined) {
     movie = "Mr. Nobody";
+  } else if (process.argv[2] === "do-what-it-says"){
+    movie;
   } else {
-    var movie = process.argv.slice(3).join("+");
+    movie = process.argv.slice(3).join("+");
   }
 
   var queryUrl =
@@ -92,13 +96,14 @@ function movieThis(movie) {
           JSON.stringify(response.data.Ratings[1].Value, null, 2)
       );
     }
-    console.log("Country: " + response.data.Country);
+    console.log("Location(s) Filmed: " + response.data.Country);
     console.log("Language: " + response.data.Language);
     console.log("Plot: " + response.data.Plot);
     console.log("Actors: " + response.data.Actors);
   });
 }
 
+// reads the random.txt file and and runs what is provided in that file
 function doWhatItSays() {
   fs.readFile("random.txt", "utf8", function(error, data) {
     if (error) {
@@ -119,6 +124,7 @@ function doWhatItSays() {
   });
 }
 
+// takes input from run and runs the appropriate function
 function runFunction(input, functionData) {
   if (input === "concert-this") {
     concertThis(functionData);
@@ -131,12 +137,16 @@ function runFunction(input, functionData) {
   }
 };
 
-function runThis(argOne, argTwo) {
+// looks at argv[2] and argv[3] which gets pushed into runFunction that chooses  which 
+// function to run based on the input
+function run(argOne, argTwo) {
   runFunction(argOne, argTwo);
 }
 
-runThis(process.argv[2], process.argv[3]);
+run(process.argv[2], process.argv[3]);
 
+
+// capitalized first letter so make some of the returned info more presentable 
 var titleCase = function(str) {
   var result = [];
 

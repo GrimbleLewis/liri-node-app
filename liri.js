@@ -4,7 +4,9 @@
 // -------------------------------------------------------------------------------------------------------------------------------------
 // node liri.js concert-this <artist name>
 // node liri.js spotify-this-song <song name>
+// spotify-this-song uses the song "The Sign" is no song is provided
 // node liri.js movie-this <movie name>
+// movie-this uses the movie "Mr. Nobody" if no movie is provided
 // node liri.js do-what-it-says
 // do-what-it-says command runs a function that reads the file random.txt and runs the appropriate function based on the text provided
 // -------------------------------------------------------------------------------------------------------------------------------------
@@ -19,6 +21,8 @@ var moment = require("moment");
 var Spotify = require("node-spotify-api");
 var spotify = new Spotify(keys.spotify);
 
+
+// concert-this provides the next 10 shows a artist will play unless there are no upcoming events scheduled on bandsintown
 function concertThis(artist) {
   // if running do-what-it-says, artist should not be in quotations in random.txt file
   if (process.argv[2] === "do-what-it-says") {
@@ -61,6 +65,9 @@ function concertThis(artist) {
   });
 }
 
+
+// spotify-this-song takes in a song and returns the song, artist, album, and spotify link to the song
+// spotify-this-song uses the song "The Sign" is no song is provided
 function spotifyThisSong(song) {
   if (process.argv[2] !== "do-what-it-says" && process.argv[3] === undefined) {
     song = "The Sign";
@@ -88,6 +95,9 @@ function spotifyThisSong(song) {
     });
 }
 
+
+// movie-this takes in a movie and returns an avast amount of information about that movie
+// movie-this uses the movie "Mr. Nobody" if no movie is provided
 function movieThis(movie) {
   if (process.argv[2] !== "do-what-it-says" && process.argv[3] === undefined) {
     movie = "Mr. Nobody";

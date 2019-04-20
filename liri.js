@@ -9,17 +9,15 @@
 // do-what-it-says command runs a function that reads the file random.txt and runs the appropriate function based on the text provided
 // -------------------------------------------------------------------------------------------------------------------------------------
 
-
+// all of the required programs needed to run this app
 require("dotenv").config();
 
-// all of the required programs needed to run this app
 var keys = require("./keys.js");
 var axios = require("axios");
 var fs = require("fs");
 var moment = require("moment");
 var Spotify = require("node-spotify-api");
 var spotify = new Spotify(keys.spotify);
-
 
 function concertThis(artist) {
   // if running do-what-it-says, artist should not be in quotations in random.txt file
@@ -33,34 +31,40 @@ function concertThis(artist) {
     artist +
     "/events?app_id=codingbootcamp";
   axios.get(queryUrl).then(function(response) {
-    if (response.data[0] === undefined){
-      console.log("\nI'm sorry, it doesn't look like there are any upcoming events for " + titleCase(artist));
+    if (response.data[0] === undefined) {
+      console.log(
+        "\nI'm sorry, it doesn't look like there are any upcoming events for " +
+          titleCase(artist)
+      );
     } else {
-    console.log("\nHere are the next 10 upcoming shows for " + titleCase(artist) + "\n\n");
-    for (var i = 0; i < 10; i++) {
-      console.log("Venue Name: " + response.data[i].venue.name);
       console.log(
-        "Venue Location: " +
-          response.data[i].venue.city +
-          ", " +
-          response.data[i].venue.region
+        "\nHere are the next 10 upcoming shows for " +
+          titleCase(artist) +
+          "\n\n"
       );
-      console.log(
-        "Event Date: " +
-          moment(response.data[i].datetime).format("MM/DD/YYYY") +
-          "\n"
-      );
+      for (var i = 0; i < 10; i++) {
+        console.log("Venue Name: " + response.data[i].venue.name);
+        console.log(
+          "Venue Location: " +
+            response.data[i].venue.city +
+            ", " +
+            response.data[i].venue.region
+        );
+        console.log(
+          "Event Date: " +
+            moment(response.data[i].datetime).format("MM/DD/YYYY") +
+            "\n"
+        );
+      }
+      console.log("We hope to see you at a future event!");
     }
-    console.log("We hope to see you at a future event!");
-  }
   });
-
 }
 
 function spotifyThisSong(song) {
   if (process.argv[2] !== "do-what-it-says" && process.argv[3] === undefined) {
     song = "The Sign";
-  } else if (process.argv[2] === "do-what-it-says"){
+  } else if (process.argv[2] === "do-what-it-says") {
     song;
   } else {
     song = process.argv.slice(3).join(" ");
@@ -84,12 +88,10 @@ function spotifyThisSong(song) {
     });
 }
 
-
-
 function movieThis(movie) {
   if (process.argv[2] !== "do-what-it-says" && process.argv[3] === undefined) {
     movie = "Mr. Nobody";
-  } else if (process.argv[2] === "do-what-it-says"){
+  } else if (process.argv[2] === "do-what-it-says") {
     movie;
   } else {
     movie = process.argv.slice(3).join("+");
@@ -148,9 +150,9 @@ function runFunction(input, functionData) {
   } else if (input === "do-what-it-says") {
     doWhatItSays();
   }
-};
+}
 
-// looks at argv[2] and argv[3] which gets pushed into runFunction that chooses  which 
+// looks at argv[2] and argv[3] which gets pushed into runFunction that chooses  which
 // function to run based on the input
 function run(argOne, argTwo) {
   runFunction(argOne, argTwo);
@@ -158,8 +160,7 @@ function run(argOne, argTwo) {
 
 run(process.argv[2], process.argv[3]);
 
-
-// capitalized first letter so make some of the returned info more presentable 
+// capitalized first letter so make some of the returned info more presentable
 var titleCase = function(str) {
   var result = [];
 
